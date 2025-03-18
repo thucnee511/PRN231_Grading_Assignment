@@ -36,6 +36,14 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
+##front_end libraries
+lib
+
+# System Operational Files
+Thumbs.db
+ehthumbs.db
+.DS_Store
+
 # Visual Studio 2015/2017 cache/options directory
 .vs
 .vscode
