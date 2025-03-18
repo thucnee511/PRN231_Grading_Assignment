@@ -1,0 +1,43 @@
+### Add Nuget Package
+
+Repositories Project
+```
+dotnet add package Microsoft.EntityFrameworkCore --version 8.0.5
+dotnet add package Microsoft.EntityFrameworkCore.SqlServer --version 8.0.5
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.0.5
+dotnet add package Microsoft.Extensions.Configuration --version 8.0.0
+dotnet add package Microsoft.Extensions.Configuration.Json --version 8.0.0
+```
+
+APIServices Project
+```
+dotnet add package  Microsoft.AspNetCore.Authentication.JwtBearer --version 8.0.10
+dotnet add package Microsoft.AspNetCore.OData --version 8.2.5
+```
+
+Clients.MVC Project
+```
+dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design --version 8.0.7
+dotnet add package System.IdentityModel.Tokens.Jwt --version 8.3.0
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 8.0.5
+dotnet add package Newtonsoft.Json --version 13.0.3
+```
+
+### Configurate Database Connection
+
+```
+private string GetConnectionString(string connectionStringName)
+{
+    var config = new ConfigurationBuilder()
+        .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
+        .AddJsonFile("appsettings.json")
+        .Build();
+
+    string connectionString = config.GetConnectionString(connectionStringName);
+    return connectionString;
+}
+
+protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+    => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection"))
+        .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
+```

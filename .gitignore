@@ -409,3 +409,4 @@ FodyWeavers.xsd
 *.sln.iml
 .env
 # End of https://www.toptal.com/developers/gitignore/api/csharp
+/SP25_NET1720_PRN231_ASM01_SE171089_ThucHN/SBS.Repositories/efpt.config.json
