@@ -23,5 +23,36 @@ namespace SBS.APIServices.Controllers
         [Authorize(Roles = "1,2")]
         public async Task<IEnumerable<Transaction>> Get()
             => await _transactionService.GetTransactionsAsync();
+
+        // GET api/<TransactionController>/5
+        [HttpGet("{id}")]
+        [Authorize(Roles = "1,2")]
+        public async Task<Transaction?> Get(Guid id)
+            => await _transactionService.GetTransactionAsync(id);
+        
+        // POST api/<TransactionController>
+        [HttpPost]
+        [Authorize(Roles = "1,2")]
+        public async Task<int> Post([FromBody] Transaction transaction)
+            => await _transactionService.AddAsync(transaction);
+
+        // PUT api/<TransactionController>/5
+        [HttpPut]
+        [Authorize(Roles = "1,2")]
+        public async Task<int> Put([FromBody] Transaction transaction)
+            => await _transactionService.UpdateAsync(transaction);
+
+        // DELETE api/<TransactionController>/5
+        [HttpDelete("{id}")]
+        [Authorize(Roles = "1,2")]
+        public async Task<bool> Delete(Guid id)
+        {
+            var transaction = await _transactionService.GetTransactionAsync(id);
+            if (transaction == null)
+            {
+                return false;
+            }
+            return await _transactionService.DeleteAsync(transaction) != 0;
+        }
     }
 }

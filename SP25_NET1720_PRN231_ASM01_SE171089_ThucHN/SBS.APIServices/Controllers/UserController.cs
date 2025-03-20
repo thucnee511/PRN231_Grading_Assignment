@@ -26,36 +26,5 @@ namespace SBS.APIServices.Controllers
         [Authorize(Roles ="1,2")]
         public async Task<IEnumerable<User>> GetAll()
             => await _userService.GetAllUsersAsync();
-
-        // GET api/<UserController>/5
-        [HttpGet("{id}")]
-        [Authorize(Roles = "1,2")]
-        public async Task<User?> Get(Guid id)
-            => await _userService.GetUserAsync(id);
-
-        // POST api/<UserController>
-        [HttpPost]
-        [Authorize(Roles = "1,2")]
-        public async Task<int> Post([FromBody] User user)
-            => await _userService.AddAsync(user);
-
-        // PUT api/<UserController>/5
-        [HttpPut]
-        [Authorize(Roles = "1,2")]
-        public async Task<int> Put([FromBody] User user)
-            => await _userService.UpdateAsync(user);
-
-        // DELETE api/<UserController>/5
-        [HttpDelete("{id}")]
-        [Authorize(Roles = "1,2")]
-        public async Task<bool> Delete(Guid id)
-        {
-            var user = await _userService.GetUserAsync(id);
-            if (user == null)
-            {
-                return false;
-            }
-            return await _userService.DeleteAsync(user) != 0;
-        }
     }
 }
