@@ -18,7 +18,7 @@ namespace SBS.Repositories.Base
         }
         protected DbSet<T> DbSet
         {
-            get => _dbSet ??= _context.Set<T>();
+            get => _dbSet ??= Context.Set<T>();
         }
 
         public async Task<List<T>> GetAllAsync() => await DbSet.ToListAsync();
