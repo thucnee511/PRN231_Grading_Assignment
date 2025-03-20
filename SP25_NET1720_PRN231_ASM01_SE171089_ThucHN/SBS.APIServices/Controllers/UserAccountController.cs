@@ -44,11 +44,11 @@ namespace SBS.APIServices.Controllers
 
             var token = new JwtSecurityToken(_configuration["Jwt:Issuer"]
                     , _configuration["Jwt:Audience"]
-                    , new Claim[]
-                    {
-                new(ClaimTypes.Name, user.UserName),
-                new(ClaimTypes.Role, user.RoleId.ToString()),
-                    },
+                    ,
+                    [
+                        new(ClaimTypes.Name, user.UserName),
+                        new(ClaimTypes.Role, user.RoleId.ToString()),
+                    ],
                     expires: DateTime.Now.AddMinutes(120),
                     signingCredentials: credentials
                 );
