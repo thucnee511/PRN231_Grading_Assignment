@@ -7,7 +7,6 @@ namespace SBS.Services
     {
         Task<List<User>> GetAllUsersAsync();
         Task<User?> GetUserAsync(Guid id);
-        Task<List<User>> SearchUsers(string? username, string? email, string? status);
         Task<int> AddAsync(User user);
         Task<int> UpdateAsync(User user);
         Task<int> DeleteAsync(User id);
@@ -20,11 +19,9 @@ namespace SBS.Services
             _userRepository = new();
         }
         public async Task<List<User>> GetAllUsersAsync()
-            => await _userRepository.GetUsersAsync();
+            => await _userRepository.GetAllAsync();
         public async Task<User?> GetUserAsync(Guid id)
-            => await _userRepository.GetUserAsync(id);
-        public async Task<List<User>> SearchUsers(string? username, string? email, string? status)
-            => await _userRepository.Search(username, email, status);
+            => await _userRepository.GetOneAsync(id);
         public async Task<int> AddAsync(User user)
             => await _userRepository.AddAsync(user);
         public async Task<int> UpdateAsync(User user)
