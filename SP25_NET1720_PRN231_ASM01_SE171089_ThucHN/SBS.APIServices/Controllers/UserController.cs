@@ -11,7 +11,6 @@ namespace SBS.APIServices.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
-    [EnableQuery]
 
     public class UserController : ControllerBase
     {

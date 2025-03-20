@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.OData.Query;
 using SBS.Repositories.Models;
 using SBS.Services;
 
@@ -10,6 +11,7 @@ namespace SBS.APIServices.Controllers
     [Route("api/[controller]")]
     [ApiController]
     [Authorize]
+    [EnableQuery]
     public class TransactionController : ControllerBase
     {
         private readonly ITransactionService _transactionService;
@@ -29,7 +31,7 @@ namespace SBS.APIServices.Controllers
         [Authorize(Roles = "1,2")]
         public async Task<Transaction?> Get(Guid id)
             => await _transactionService.GetTransactionAsync(id);
-        
+
         // POST api/<TransactionController>
         [HttpPost]
         [Authorize(Roles = "1,2")]
@@ -54,5 +56,10 @@ namespace SBS.APIServices.Controllers
             }
             return await _transactionService.DeleteAsync(transaction) != 0;
         }
+
+        [HttpGet("Search")]
+        [Authorize(Roles = "1,2")]
+        public async Task<IEnumerable<Transaction>> Search([FromQuery] string paymentMethod, [FromQuery] string status, [FromQuery] string username)
+            => await _transactionService.Search(paymentMethod, status, username);
     }
 }

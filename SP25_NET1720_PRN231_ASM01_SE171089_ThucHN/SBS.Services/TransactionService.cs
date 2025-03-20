@@ -5,6 +5,7 @@ namespace SBS.Services
 {
     public interface ITransactionService
     {
+        Task<List<Transaction>> Search(string? paymentMethod, string? status, string? username);
         Task<List<Transaction>> GetTransactionsAsync();
         Task<Transaction?> GetTransactionAsync(Guid id);
         Task<int> AddAsync(Transaction transaction);
@@ -18,7 +19,8 @@ namespace SBS.Services
         {
             _transactionRepository = new();
         }
-
+        public async Task<List<Transaction>> Search(string? paymentMethod, string? status, string? username)
+            => await _transactionRepository.Search(paymentMethod, status, username);
         public async Task<List<Transaction>> GetTransactionsAsync()
             => await _transactionRepository.GetAllAsync();
         public async Task<Transaction?> GetTransactionAsync(Guid id)
