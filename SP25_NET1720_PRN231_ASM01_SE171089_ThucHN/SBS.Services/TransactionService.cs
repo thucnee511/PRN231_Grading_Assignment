@@ -22,9 +22,9 @@ namespace SBS.Services
         public async Task<List<Transaction>> Search(string? paymentMethod, string? status, string? username)
             => await _transactionRepository.Search(paymentMethod, status, username);
         public async Task<List<Transaction>> GetTransactionsAsync()
-            => await _transactionRepository.GetAllAsync();
+            => await _transactionRepository.GetAllTransactionsAsync();
         public async Task<Transaction?> GetTransactionAsync(Guid id)
-            => await _transactionRepository.GetOneAsync(id);
+            => await _transactionRepository.GetTransactionAsync(id);
         public async Task<int> AddAsync(Transaction transaction)
             => await _transactionRepository.AddAsync(transaction);
         public async Task<int> UpdateAsync(Transaction transaction)
