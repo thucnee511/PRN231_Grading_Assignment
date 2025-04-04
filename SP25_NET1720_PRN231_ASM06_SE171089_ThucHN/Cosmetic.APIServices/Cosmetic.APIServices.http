@@ -1,6 +1,0 @@
-@Cosmetic.APIServices_HostAddress = http://localhost:5089
-
-GET {{Cosmetic.APIServices_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###

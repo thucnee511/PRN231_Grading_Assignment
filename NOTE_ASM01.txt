@@ -41,3 +41,89 @@ protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
     => optionsBuilder.UseSqlServer(GetConnectionString("DefaultConnection"))
         .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking);
 ```
+
+### Configurate APIServices
+
+appsettings.json
+```
+"ConnectionStrings": {
+    "DefaultConnection": "//Lấy cuỗi trong context và xóa comment ở đó"
+  },
+"Jwt": {
+    "Key": "0ccfeb299b126a479a64630e2d34e9e91e5fcbcaea8ac9e3347e224b0557a53e",
+    "Issuer": "https://localhost:Port ở trên là gì bỏ vô đây",
+    "Audience": "https://localhost:Port ở trên là gì bỏ vô đây"
+}
+
+```
+
+Program.cs
+```
+
+builder.Services.AddScoped<IModelService, ModelService>();
+
+app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+static IEdmModel GetEdmModel()
+{
+    var odataBuilder = new ODataConventionModelBuilder();
+    odataBuilder.EntitySet<Model1>("Model1");
+    odataBuilder.EntitySet<Model2>("Model2");
+    return odataBuilder.GetEdmModel();
+}
+
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.Never;
+}).AddOData(options =>
+{
+    options.Select().Filter().OrderBy().Expand().SetMaxTop(null).Count();
+    options.AddRouteComponents("odata", GetEdmModel());
+});
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
+
+builder.Services.AddSwaggerGen(option =>
+{
+    option.ResolveConflictingActions(ApiDes => ApiDes.First());
+    option.DescribeAllParametersInCamelCase();
+    option.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter a valid token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "Bearer"
+    });
+    option.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
+
+```
